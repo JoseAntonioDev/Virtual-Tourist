@@ -71,32 +71,36 @@ class PhotoAlbumVC: UIViewController {
     fileprivate func reloadPhotos() {
         // First delete our album & disable newCollection button until download has finished
         deletePhotos()
-        startIndicatingActivity()
-        newCollection.isEnabled = false
+        setButtonsUI(enable: false)
         FlickrClient.getPhotosByLocation(lat: pinSelected.latitude, lon: pinSelected.longitude) { response, error in
-            if response?.stat == "ok" {
-                let urlArray = FlickrClient.getImgURL(photoStructs: response!.photos.photo)
-                let mainContext = self.dataController.viewContext
-                mainContext.perform {
-                //Download images & save context
-                    DownloadImages.downloadImages(urlArray: urlArray, context: self.dataController.viewContext) { photos, error in
-                        for photo in photos {
-                            self.pinSelected.addToPhotos(photo)
-                        }
-                    }
-                    
-                    try? mainContext.save()
-                }
-                self.stopIndicatingActivity()
-                self.collectionView.reloadData()
-                self.newCollection.isEnabled = true
-            } else {
+            guard let response = response else {
+                self.setButtonsUI(enable: true)
                 showError(message: Errors.flickrServer.localizedDescription, actualVC: self)
-                self.stopIndicatingActivity()
-                self.collectionView.reloadData()
-                self.newCollection.isEnabled = true
                 return
             }
+            
+            for photoStruct in response.photos.photo {
+                let mainContext = self.dataController.viewContext
+                let imgPath = FlickrClient.getImgPath(photoStruct: photoStruct)
+                mainContext.perform {
+                    let photoInstance = DownloadImages.savePhotoURL(imgPath: imgPath, context: self.dataController.viewContext)
+                    self.pinSelected.addToPhotos(photoInstance)
+                    try? mainContext.save()
+                }
+            }
+            self.setButtonsUI(enable: true)
+        }
+    }
+    
+    func setButtonsUI(enable: Bool) {
+        if enable {
+            self.stopIndicatingActivity()
+            self.newCollection.isEnabled = true
+            self.view.isUserInteractionEnabled = true
+        } else {
+            newCollection.isEnabled = false
+            self.startIndicatingActivity()
+            self.view.isUserInteractionEnabled = false
         }
     }
     
@@ -146,16 +150,36 @@ extension PhotoAlbumVC: UICollectionViewDataSource, UICollectionViewDelegate, UI
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let Photo = fetchedResultsController.object(at: indexPath)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseId, for: indexPath) as! CollectionCell
-        
-        // Set placeholder while downloading state
-        if activityIndicator.isAnimating {
-            cell.placeholderLabel.text = "Downloading"
+        let mainContext = dataController.viewContext
+        // Download an image per cell
+        if Photo.image == nil && Photo.imageUrl != nil {
+            cell.startIndicatingActivity()
+            DownloadImages.downloadImage(imgUrl: Photo.imageUrl!) { data, error in
+                guard let data = data else {
+                    cell.stopIndicatingActivity()
+                    DispatchQueue.main.async {
+                        cell.errorLabel.text = Errors.photoDownload.localizedDescription
+                    }
+                    return
+                }
+                DispatchQueue.main.async {
+                    cell.errorLabel.text = ""
+                    cell.imageView.image = UIImage(data: data)
+                    cell.stopIndicatingActivity()
+                }
+                mainContext.perform {
+                    Photo.image = data
+                    try? mainContext.save()
+                }
+            }
         }
         
-        // Configure cell
-        if let photoData = Photo.image {
-            cell.placeholderLabel.text = ""
-            cell.imageView.image = UIImage(data: photoData)
+        if Photo.image != nil {
+            DispatchQueue.main.async {
+                cell.errorLabel.text = ""
+                cell.imageView.image = UIImage(data: Photo.image!)
+                cell.stopIndicatingActivity()
+            }
         }
         
         return cell

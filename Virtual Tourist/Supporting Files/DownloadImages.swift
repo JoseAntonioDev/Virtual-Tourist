@@ -11,35 +11,25 @@ import UIKit
 
 class DownloadImages {
 
-    static func downloadImages(urlArray: [URL], context: NSManagedObjectContext, completion: @escaping ([Photo], Error?) -> Void) {
-         var photos: [Photo] = []
+    static func downloadImage(imgUrl: URL, completion: @escaping (Data?, Error?) -> Void) {
          DispatchQueue.global(qos: .background).async {
-             for url in urlArray {
-                /*let task = URLSession.shared.dataTask(with: url) { data, response, error in
-                    guard let data = data else {
-                        print("error conecting")
-                        return
-                    }
-                    let photo = NSEntityDescription.insertNewObject(forEntityName: "Photo", into: context) as! Photo
-                    photo.image = data
-                    photo.imageUrl = url
-                    print("this is the photo = ")
-                    photos.append(photo)
+            let request = URLRequest(url: imgUrl)
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data, error == nil else {
+                    completion(nil, error)
+                    return
                 }
-                task.resume()*/
-                
-                 if let imgData = try? Data(contentsOf: url) {
-                    let photo = NSEntityDescription.insertNewObject(forEntityName: "Photo", into: context) as! Photo
-                    DispatchQueue.main.async {
-                        photo.image = imgData
-                        photo.imageUrl = url
-                        photos.append(photo)
-                    }
-//
-                 }
-             }
-            completion(photos, nil)
+                completion(data, nil)
+            }
+            task.resume()
         }
-
     }
+    
+    static func savePhotoURL(imgPath: String, context: NSManagedObjectContext) -> Photo {
+        let url = URL(string: imgPath)
+        let photo = NSEntityDescription.insertNewObject(forEntityName: "Photo", into: context) as! Photo
+        photo.imageUrl = url
+        return photo
+    }
+    
 }

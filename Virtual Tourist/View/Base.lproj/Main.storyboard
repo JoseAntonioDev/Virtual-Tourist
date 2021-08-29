@@ -58,16 +58,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="jz2-fF-hKC">
-                                <rect key="frame" x="0.0" y="44" width="414" height="769"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="774"/>
                                 <subviews>
                                     <mapView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" mapType="standard" zoomEnabled="NO" scrollEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QI6-VT-SVQ">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="237"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="242"/>
                                         <connections>
                                             <outlet property="delegate" destination="OG6-bx-Vcf" id="l1L-YW-RSM"/>
                                         </connections>
                                     </mapView>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="751" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="XRq-Cz-CGg">
-                                        <rect key="frame" x="0.0" y="245" width="414" height="524"/>
+                                        <rect key="frame" x="0.0" y="250" width="414" height="524"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ghZ-YT-eGF">
                                             <size key="itemSize" width="128" height="128"/>
@@ -83,28 +83,37 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DM5-Em-FPx">
-                                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
-                                                        </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVM-nS-IqD">
-                                                            <rect key="frame" x="46" y="54" width="36" height="20.5"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="7xs-6z-0Vp">
+                                                            <rect key="frame" x="54" y="54" width="20" height="20"/>
+                                                        </activityIndicatorView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AD5-RS-sQD">
+                                                            <rect key="frame" x="48.5" y="86" width="31" height="14.5"/>
+                                                            <accessibility key="accessibilityConfiguration">
+                                                                <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
+                                                            </accessibility>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DM5-Em-FPx">
+                                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                        </imageView>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstItem="aVM-nS-IqD" firstAttribute="centerX" secondItem="PdF-M2-TfE" secondAttribute="centerX" id="1P1-4w-idf"/>
                                                         <constraint firstAttribute="trailing" secondItem="DM5-Em-FPx" secondAttribute="trailing" id="604-Sg-QRp"/>
                                                         <constraint firstAttribute="bottom" secondItem="DM5-Em-FPx" secondAttribute="bottom" id="73V-A8-4o1"/>
+                                                        <constraint firstItem="AD5-RS-sQD" firstAttribute="centerX" secondItem="7xs-6z-0Vp" secondAttribute="centerX" id="Dgu-Rf-Ti4"/>
                                                         <constraint firstItem="DM5-Em-FPx" firstAttribute="leading" secondItem="PdF-M2-TfE" secondAttribute="leading" id="FUu-68-V0W"/>
-                                                        <constraint firstItem="aVM-nS-IqD" firstAttribute="centerY" secondItem="PdF-M2-TfE" secondAttribute="centerY" id="Khz-FK-M4C"/>
+                                                        <constraint firstItem="AD5-RS-sQD" firstAttribute="top" secondItem="7xs-6z-0Vp" secondAttribute="bottom" constant="12" id="XAe-9F-aer"/>
+                                                        <constraint firstItem="7xs-6z-0Vp" firstAttribute="centerX" secondItem="PdF-M2-TfE" secondAttribute="centerX" id="eCf-3J-2PC"/>
                                                         <constraint firstItem="DM5-Em-FPx" firstAttribute="top" secondItem="PdF-M2-TfE" secondAttribute="top" id="kZO-Qu-R8h"/>
+                                                        <constraint firstItem="7xs-6z-0Vp" firstAttribute="centerY" secondItem="PdF-M2-TfE" secondAttribute="centerY" id="uIT-Nd-k3Y"/>
                                                     </constraints>
                                                 </collectionViewCellContentView>
                                                 <connections>
+                                                    <outlet property="activityIndicator" destination="7xs-6z-0Vp" id="58u-Di-Wbs"/>
+                                                    <outlet property="errorLabel" destination="AD5-RS-sQD" id="naa-fo-6Sq"/>
                                                     <outlet property="imageView" destination="DM5-Em-FPx" id="gix-Q9-Dte"/>
-                                                    <outlet property="placeholderLabel" destination="aVM-nS-IqD" id="PBz-vP-th7"/>
                                                 </connections>
                                             </collectionViewCell>
                                         </cells>
@@ -137,7 +146,7 @@
                                 </constraints>
                             </stackView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="Uq9-mi-swI">
-                                <rect key="frame" x="0.0" y="813" width="414" height="49"/>
+                                <rect key="frame" x="0.0" y="818" width="414" height="44"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="vaB-Tn-sLZ"/>
                                     <barButtonItem title="New Collection" width="500" id="KgL-g3-4yC">

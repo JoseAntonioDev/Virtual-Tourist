@@ -91,16 +91,15 @@ class TravelLocationsMapVC: UIViewController, UIGestureRecognizerDelegate {
                 showError(message: Errors.flickrServer.localizedDescription, actualVC: self)
                 return
             }
-            let urlArray = FlickrClient.getImgURL(photoStructs: response.photos.photo)
-
-            DownloadImages.downloadImages(urlArray: urlArray, context: self.dataController.viewContext) { photos, error  in
-                for photo in photos {
-                    // Add each photo to the pin
-                    pin.addToPhotos(photo)
-                }
+            
+            for photo in response.photos.photo {
+                let imgPath = FlickrClient.getImgPath(photoStruct: photo)
+                let photoInstance = DownloadImages.savePhotoURL(imgPath: imgPath, context: self.dataController.viewContext)
+                pin.addToPhotos(photoInstance)
             }
         }
     }
+    
     
     func segueToAlbum(_sender: Any?) {
         // Inject data into the next controller
@@ -108,18 +107,13 @@ class TravelLocationsMapVC: UIViewController, UIGestureRecognizerDelegate {
         let albumVC = storyboard?.instantiateViewController(identifier: identifier) as! PhotoAlbumVC
         let pinSelected = _sender as! Pin
         albumVC.dataController = self.dataController
-        // if we don't have photos associated with the pin selected for any reason, we start the download
-        if pinSelected.photos == [] {
-            albumVC.startIndicatingActivity()
-            downloadFlickrPhotos(pin: pinSelected)
-        }
         albumVC.pinSelected = pinSelected
         self.navigationController?.pushViewController(albumVC, animated: true)
     }
     
     fileprivate func addGestureRecognizer() {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action:#selector(self.longPressed(_:)))
-        longPressGesture.minimumPressDuration = 1
+        longPressGesture.minimumPressDuration = 0.5
         longPressGesture.delegate = self
         longPressGesture.delaysTouchesBegan = true
         mapView.addGestureRecognizer(longPressGesture)

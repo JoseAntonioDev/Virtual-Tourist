@@ -11,7 +11,7 @@ import UIKit
 // List of errors that could happen during running the app
 public enum Errors: Error {
     case flickrServer
-
+    case photoDownload
 }
 
 // Description of each
@@ -19,7 +19,7 @@ extension Errors: LocalizedError {
     public var localizedDescription: String {
         switch self {
         case .flickrServer: return "Error from the server, please check your connection & try again."
-
+        case .photoDownload: return "Error downloading"
         }
     }
 }

@@ -56,15 +56,11 @@ class FlickrClient {
         }
     }
     
-    // Get a url for each photo struct from Flickr's response
-    class func getImgURL(photoStructs: [PhotoStruct]) -> [URL] {
-        var urlArray: [URL] = []
-        for photoStruct in photoStructs {
-            let urlString = "https://farm\(photoStruct.farm).staticflickr.com/\(photoStruct.server)/\(photoStruct.id)_\(photoStruct.secret).jpg"
-            let url = URL(string: urlString)!
-            urlArray.append(url)
-        }
-        return urlArray
+    // Get an image path from Flickr's response
+    class func getImgPath(photoStruct: PhotoStruct) -> String {
+        let imagePath: String = "https://farm\(photoStruct.farm).staticflickr.com/\(photoStruct.server)/\(photoStruct.id)_\(photoStruct.secret).jpg"
+        
+        return imagePath
     }
     
 }
